@@ -13,7 +13,7 @@ public class PlayerControls : MonoBehaviour {
     [SerializeField] private float m_BufferedJumpTime = 0.1f;
 
     private bool isCoyoteTime = false;
-    private bool queuedJump = false;
+    public bool queuedJump = false;
 
     private void Update() {
         float rawHInput = Input.GetAxis("Horizontal");
@@ -31,11 +31,15 @@ public class PlayerControls : MonoBehaviour {
     private void FixedUpdate() {
         bool didJump = PlayerBehaviors.Move(m_HorizontalMovement * Time.deltaTime, m_DoJump, isCoyoteTime, queuedJump);
 
-        // Buffer Jump
-        if (!didJump && m_DoJump) {
-            Debug.Log("Queued a jump");
-            queuedJump = true;
-            Invoke("EndQueueJump", m_BufferedJumpTime);
+        // If we didn't jump, 
+        if (!didJump) {
+            // If we tried to jump: QUEUE
+            if (m_DoJump) {
+                queuedJump = true;
+                Invoke("EndQueueJump", m_BufferedJumpTime);
+            }
+        } else {
+            if (queuedJump == true) queuedJump = false;
         }
         m_DoJump = false;
     }
@@ -51,6 +55,5 @@ public class PlayerControls : MonoBehaviour {
 
     public void EndQueueJump() {
         queuedJump = false;
-        Debug.Log("Removed Jump from Queue!");
     }
 }

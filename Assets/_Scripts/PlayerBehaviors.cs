@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 using UnityEngine.Events;
 
 public class PlayerBehaviors : MonoBehaviour {
@@ -9,6 +10,7 @@ public class PlayerBehaviors : MonoBehaviour {
     [SerializeField] private Transform m_GroundCheck; // A position marking where to check if the player is grounded.
     [SerializeField] private Transform m_CeilingCheck; // A position marking where to check for ceilings
     [SerializeField] private GameObject JumpIndicator;
+    [SerializeField] private float m_HangTime = 0f;
 
     private bool m_DoJump = false;
     private bool m_Grounded; // Whether or not the player is grounded.
@@ -17,6 +19,8 @@ public class PlayerBehaviors : MonoBehaviour {
     private Rigidbody2D m_Rigidbody2D;
     private bool m_FacingRight = true; // For determining which way the player is currently facing.
     private Vector3 m_Velocity = Vector3.zero;
+    private bool m_IsHanging = false;
+    private bool m_DidHang = false;
 
     const float k_GroundedRadius = .2f; // Radius of the overlap circle to determine if grounded
 
@@ -44,7 +48,7 @@ public class PlayerBehaviors : MonoBehaviour {
 
         // The player is grounded if a circlecast to the groundcheck position hits anything designated as ground
         // This can be done using layers instead but Sample Assets will not overwrite your project settings.
-        bool didCollide = Physics2D.Raycast(transform.position, Vector2.down, 1.0f, m_WhatIsGround);
+        Collider2D didCollide = Physics2D.OverlapCircle(m_GroundCheck.transform.position, k_GroundedRadius, m_WhatIsGround);
         if (didCollide) {
             if (!wasGrounded && !m_AlreadyGrounded) {
                 OnLandEvent.Invoke();
@@ -84,6 +88,9 @@ public class PlayerBehaviors : MonoBehaviour {
         if ((m_Grounded || isCoyoteTime) && (jump || isBuffered)) {
             // Add a vertical force to the player.
             m_Grounded = false;
+            if (m_Rigidbody2D.velocity.y < 0) {
+                m_Rigidbody2D.velocity = new Vector2(m_Rigidbody2D.velocity.x, 0f);
+            }
             m_Rigidbody2D.AddForce(new Vector2(0f, m_JumpForce));
 
             // Invoke any Jump stuff
@@ -104,7 +111,14 @@ public class PlayerBehaviors : MonoBehaviour {
                 thisAnim.SetInteger("Frame", 2);
             }
 
+            StartCoroutine(DeactivateThisObject(thisPing, 3f));
             return true;
+        }
+
+        if (!m_Grounded) {
+            if ((Mathf.Abs(m_Rigidbody2D.velocity.y) < 0.1) && (m_Jumped) && (!m_IsHanging) && (!m_DidHang)) {
+                
+            }
         }
 
         return false;
@@ -119,4 +133,14 @@ public class PlayerBehaviors : MonoBehaviour {
         theScale.x *= -1;
         transform.localScale = theScale;
     }
+
+    IEnumerator DeactivateThisObject(GameObject thisObject, float delayTime) {
+        yield return new WaitForSeconds(delayTime);
+        thisObject.SetActive(false);
+    }
+
+    private void EndHangTime() {
+        
+    }
+
 }
