@@ -1,31 +1,30 @@
 ﻿using UnityEngine;
 using UnityEngine.Events;
 
-public class Player : MonoBehaviour {
+public class PlayerBehaviors : MonoBehaviour {
     [SerializeField] private float m_JumpForce = 400f; // Amount of force added when the player jumps.
     [Range(0, .3f)][SerializeField] private float m_MovementSmoothing = .05f; // How much to smooth out the movement
     [SerializeField] private bool m_AirControl = false; // Whether or not a player can steer while jumping;
     [SerializeField] private LayerMask m_WhatIsGround; // A mask determining what is ground to the character
     [SerializeField] private Transform m_GroundCheck; // A position marking where to check if the player is grounded.
     [SerializeField] private Transform m_CeilingCheck; // A position marking where to check for ceilings
-    [SerializeField] private float m_HorizontalMovement = 0f;
     [SerializeField] private bool m_DoJump = false;
 
-    const float k_GroundedRadius = .2f; // Radius of the overlap circle to determine if grounded
     private bool m_Grounded; // Whether or not the player is grounded.
+    private bool m_AlreadyGrounded = false;
+    private bool m_Jumped = false;
     private Rigidbody2D m_Rigidbody2D;
     private bool m_FacingRight = true; // For determining which way the player is currently facing.
     private Vector3 m_Velocity = Vector3.zero;
 
+    const float k_GroundedRadius = .2f; // Radius of the overlap circle to determine if grounded
+
     [Header("Events")]
     [Space]
 
+    public UnityEvent OnJumpEvent;
+    public UnityEvent OnFallEvent;
     public UnityEvent OnLandEvent;
-
-    [System.Serializable]
-    public class BoolEvent : UnityEvent<bool> {}
-
-    
 
     private void Awake() {
         m_Rigidbody2D = GetComponent<Rigidbody2D>();
@@ -33,11 +32,8 @@ public class Player : MonoBehaviour {
         if (OnLandEvent == null)
             OnLandEvent = new UnityEvent();
 
-    }
-
-    void Update() {
-        m_HorizontalMovement = Input.GetAxis("Horizontal");
-        m_DoJump = Input.GetButtonDown("Jump");
+        if (OnJumpEvent == null)
+            OnJumpEvent = new UnityEvent();
 
     }
 
@@ -47,20 +43,22 @@ public class Player : MonoBehaviour {
 
         // The player is grounded if a circlecast to the groundcheck position hits anything designated as ground
         // This can be done using layers instead but Sample Assets will not overwrite your project settings.
-        Collider2D[] colliders = Physics2D.OverlapCircleAll(m_GroundCheck.position, k_GroundedRadius, m_WhatIsGround);
-        for (int i = 0; i < colliders.Length; i++) {
-            if (colliders[i].gameObject != gameObject) {
-                m_Grounded = true;
-                if (!wasGrounded)
-                    OnLandEvent.Invoke();
+        bool didCollide = Physics2D.Raycast(transform.position, Vector2.down, 1.0f, m_WhatIsGround);
+        if (didCollide) {
+            if (!wasGrounded && !m_AlreadyGrounded) {
+                OnLandEvent.Invoke();
+                m_AlreadyGrounded = true;
+            }
+            m_Grounded = true;
+            m_Jumped = false;
+        } else {
+            if (wasGrounded && !m_Jumped) {
+                OnFallEvent.Invoke();
             }
         }
-
-        Move(m_HorizontalMovement, m_DoJump && m_Grounded);
     }
 
-    
-    public void Move(float horizontalMove, bool jump) {
+    public void Move(float horizontalMove, bool jump, bool isCoyoteTime) {
         //only control the player if grounded or airControl is turned on
         if (m_Grounded || m_AirControl) {
 
@@ -80,11 +78,17 @@ public class Player : MonoBehaviour {
                 Flip();
             }
         }
+
         // If the player should jump...
-        if (m_Grounded && jump) {
+        if ((m_Grounded || isCoyoteTime) && jump) {
             // Add a vertical force to the player.
             m_Grounded = false;
             m_Rigidbody2D.AddForce(new Vector2(0f, m_JumpForce));
+
+            // Invoke any Jump stuff
+            OnJumpEvent.Invoke();
+            m_AlreadyGrounded = false;
+            m_Jumped = true;
         }
     }
 
