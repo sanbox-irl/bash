@@ -1686,7 +1686,8 @@ MonoBehaviour:
     m_Bits: 567
   m_GroundCheck: {fileID: 5625468}
   m_CeilingCheck: {fileID: 770177819}
-  m_DoJump: 0
+  JumpIndicator: {fileID: 1420890174517716725, guid: dac3deab316a91647b9e8bd7a961126e,
+    type: 3}
   OnJumpEvent:
     m_PersistentCalls:
       m_Calls: []
@@ -1853,7 +1854,8 @@ MonoBehaviour:
   m_RunSpeed: 30
   m_AdjustRaw: 2
   m_AdjustAmplitude: 2
-  CamelTime: 0.1
+  m_CoyoteTime: 0.1
+  m_BufferedJumpTime: 0.1
 --- !u!1 &1282679004
 GameObject:
   m_ObjectHideFlags: 0

@@ -8,8 +8,9 @@ public class PlayerBehaviors : MonoBehaviour {
     [SerializeField] private LayerMask m_WhatIsGround; // A mask determining what is ground to the character
     [SerializeField] private Transform m_GroundCheck; // A position marking where to check if the player is grounded.
     [SerializeField] private Transform m_CeilingCheck; // A position marking where to check for ceilings
-    [SerializeField] private bool m_DoJump = false;
+    [SerializeField] private GameObject JumpIndicator;
 
+    private bool m_DoJump = false;
     private bool m_Grounded; // Whether or not the player is grounded.
     private bool m_AlreadyGrounded = false;
     private bool m_Jumped = false;
@@ -58,7 +59,7 @@ public class PlayerBehaviors : MonoBehaviour {
         }
     }
 
-    public void Move(float horizontalMove, bool jump, bool isCoyoteTime) {
+    public bool Move(float horizontalMove, bool jump, bool isCoyoteTime, bool isBuffered) {
         //only control the player if grounded or airControl is turned on
         if (m_Grounded || m_AirControl) {
 
@@ -80,7 +81,7 @@ public class PlayerBehaviors : MonoBehaviour {
         }
 
         // If the player should jump...
-        if ((m_Grounded || isCoyoteTime) && jump) {
+        if ((m_Grounded || isCoyoteTime) && (jump || isBuffered)) {
             // Add a vertical force to the player.
             m_Grounded = false;
             m_Rigidbody2D.AddForce(new Vector2(0f, m_JumpForce));
@@ -89,7 +90,24 @@ public class PlayerBehaviors : MonoBehaviour {
             OnJumpEvent.Invoke();
             m_AlreadyGrounded = false;
             m_Jumped = true;
+
+            // Debug Indicators!
+            GameObject thisPing = Instantiate(JumpIndicator, transform.position, Quaternion.identity);
+            Animator thisAnim = thisPing.GetComponent<Animator>();
+            if (isCoyoteTime) {
+                thisAnim.SetInteger("Frame", 1);
+            } else {
+                thisAnim.SetInteger("Frame", 0);
+            }
+
+            if (isBuffered) {
+                thisAnim.SetInteger("Frame", 2);
+            }
+
+            return true;
         }
+
+        return false;
     }
 
     private void Flip() {

@@ -9,17 +9,16 @@ public class PlayerControls : MonoBehaviour {
     [SerializeField] private float m_RunSpeed = 20f;
     [SerializeField] private int m_AdjustRaw = 1;
     [SerializeField] private int m_AdjustAmplitude = 1;
-    [SerializeField] private float CamelTime = 0.1f;
+    [SerializeField] private float m_CoyoteTime = 0.1f;
+    [SerializeField] private float m_BufferedJumpTime = 0.1f;
 
     private bool isCoyoteTime = false;
+    private bool queuedJump = false;
 
     private void Update() {
         float rawHInput = Input.GetAxis("Horizontal");
         // Do our Game Design
         float storeSign = Mathf.Sign(rawHInput);
-        if (storeSign == -1) {
-
-        }
         rawHInput = Mathf.Pow(Mathf.Abs(rawHInput), m_AdjustRaw) * m_AdjustAmplitude;
         // Return the Sign
         rawHInput *= storeSign;
@@ -30,16 +29,28 @@ public class PlayerControls : MonoBehaviour {
     }
 
     private void FixedUpdate() {
-        PlayerBehaviors.Move(m_HorizontalMovement * Time.deltaTime, m_DoJump, isCoyoteTime);
+        bool didJump = PlayerBehaviors.Move(m_HorizontalMovement * Time.deltaTime, m_DoJump, isCoyoteTime, queuedJump);
+
+        // Buffer Jump
+        if (!didJump && m_DoJump) {
+            Debug.Log("Queued a jump");
+            queuedJump = true;
+            Invoke("EndQueueJump", m_BufferedJumpTime);
+        }
         m_DoJump = false;
     }
 
     public void StartCoyoteTime() {
         isCoyoteTime = true;
-        Invoke("EndCoyoteTime", CamelTime);
+        Invoke("EndCoyoteTime", m_CoyoteTime);
     }
 
     public void EndCoyoteTime() {
         isCoyoteTime = false;
+    }
+
+    public void EndQueueJump() {
+        queuedJump = false;
+        Debug.Log("Removed Jump from Queue!");
     }
 }
