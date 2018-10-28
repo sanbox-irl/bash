@@ -25,7 +25,7 @@ public class PlayerControls : MonoBehaviour {
         m_HorizontalMovement = rawHInput * m_RunSpeed;
         if (Input.GetButtonDown("Jump")) {
             m_DoJump = true;
-        };
+        }
     }
 
     private void FixedUpdate() {

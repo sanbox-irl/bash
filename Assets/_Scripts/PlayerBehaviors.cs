@@ -5,7 +5,6 @@ using UnityEngine.Events;
 public class PlayerBehaviors : MonoBehaviour {
     [SerializeField] private float m_JumpForce = 400f; // Amount of force added when the player jumps.
     [Range(0, .3f)][SerializeField] private float m_MovementSmoothing = .05f; // How much to smooth out the movement
-    [SerializeField] private bool m_AirControl = false; // Whether or not a player can steer while jumping;
     [SerializeField] private LayerMask m_WhatIsGround; // A mask determining what is ground to the character
     [SerializeField] private Transform m_GroundCheck; // A position marking where to check if the player is grounded.
     [SerializeField] private Transform m_CeilingCheck; // A position marking where to check for ceilings
@@ -64,24 +63,21 @@ public class PlayerBehaviors : MonoBehaviour {
     }
 
     public bool Move(float horizontalMove, bool jump, bool isCoyoteTime, bool isBuffered) {
-        //only control the player if grounded or airControl is turned on
-        if (m_Grounded || m_AirControl) {
 
-            // Move the character by finding the target velocity
-            Vector3 targetVelocity = new Vector2(horizontalMove * 10f, m_Rigidbody2D.velocity.y);
-            // And then smoothing it out and applying it to the character
-            m_Rigidbody2D.velocity = Vector3.SmoothDamp(m_Rigidbody2D.velocity, targetVelocity, ref m_Velocity, m_MovementSmoothing);
+        // Move the character by finding the target velocity
+        Vector3 targetVelocity = new Vector2(horizontalMove * 10f, m_Rigidbody2D.velocity.y);
+        // And then smoothing it out and applying it to the character
+        m_Rigidbody2D.velocity = Vector3.SmoothDamp(m_Rigidbody2D.velocity, targetVelocity, ref m_Velocity, m_MovementSmoothing);
 
-            // If the input is moving the player right and the player is facing left...
-            if (horizontalMove > 0 && !m_FacingRight) {
-                // ... flip the player.
-                Flip();
-            }
-            // Otherwise if the input is moving the player left and the player is facing right...
-            else if (horizontalMove < 0 && m_FacingRight) {
-                // ... flip the player.
-                Flip();
-            }
+        // If the input is moving the player right and the player is facing left...
+        if (horizontalMove > 0 && !m_FacingRight) {
+            // ... flip the player.
+            Flip();
+        }
+        // Otherwise if the input is moving the player left and the player is facing right...
+        else if (horizontalMove < 0 && m_FacingRight) {
+            // ... flip the player.
+            Flip();
         }
 
         // If the player should jump...
@@ -117,7 +113,7 @@ public class PlayerBehaviors : MonoBehaviour {
 
         if (!m_Grounded) {
             if ((Mathf.Abs(m_Rigidbody2D.velocity.y) < 0.1) && (m_Jumped) && (!m_IsHanging) && (!m_DidHang)) {
-                
+
             }
         }
 
@@ -140,7 +136,7 @@ public class PlayerBehaviors : MonoBehaviour {
     }
 
     private void EndHangTime() {
-        
+
     }
 
 }

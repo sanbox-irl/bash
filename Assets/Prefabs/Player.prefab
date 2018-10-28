@@ -1,65 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &1131402460106485592
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1131402460106485599}
-  m_Layer: 8
-  m_Name: Floor
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1131402460106485599
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1131402460106485592}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.5, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1131402461056125128}
-  m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1131402460717662777
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1131402460717662776}
-  m_Layer: 8
-  m_Name: Ceiling
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1131402460717662776
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1131402460717662777}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.072, y: 0.435, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1131402461056125128}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1131402461056125124
 GameObject:
   m_ObjectHideFlags: 0
@@ -72,8 +12,7 @@ GameObject:
   - component: {fileID: 1131402461056125135}
   - component: {fileID: 1131402461056125129}
   - component: {fileID: 1131402461056125130}
-  - component: {fileID: 1131402461056125131}
-  - component: {fileID: 1131402461056125134}
+  - component: {fileID: 6441752160503674194}
   m_Layer: 8
   m_Name: Player
   m_TagString: Player
@@ -91,9 +30,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 1131402460717662776}
-  - {fileID: 1131402460106485599}
+  m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -187,12 +124,12 @@ Rigidbody2D:
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 9
-  m_Material: {fileID: 6200000, guid: 27d881850dd0f3c4b835e204e68f786f, type: 2}
-  m_Interpolate: 0
-  m_SleepingMode: 1
+  m_Material: {fileID: 0}
+  m_Interpolate: 1
+  m_SleepingMode: 0
   m_CollisionDetection: 1
   m_Constraints: 4
---- !u!114 &1131402461056125131
+--- !u!114 &6441752160503674194
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -201,75 +138,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 1131402461056125124}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 04c2a79ce839a7c49b7dd66e3cb24da2, type: 3}
+  m_Script: {fileID: 11500000, guid: c1b4145d76c690241ba0942a360fc690, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_JumpForce: 1300
-  m_MovementSmoothing: 0.05
-  m_AirControl: 1
-  m_WhatIsGround:
-    serializedVersion: 2
-    m_Bits: 567
-  m_GroundCheck: {fileID: 1131402460106485599}
-  m_CeilingCheck: {fileID: 1131402460717662776}
+  minGroundNormalY: 0.65
+  GravityModifier: 1
+  MaxSpeed: 12
+  JumpTakeOffSpeed: 12
+  AdjustRawInputExponentially: 1
+  AdjustRawInputAmplitude: 1
+  CoyoteDuration: 0.1
+  BufferedDuration: 0.1
+  DrawJumpTypeIndicators: 1
   JumpIndicator: {fileID: 1420890174517716725, guid: dac3deab316a91647b9e8bd7a961126e,
     type: 3}
-  m_HangTime: 0
-  OnJumpEvent:
-    m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
-  OnFallEvent:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1131402461056125134}
-        m_MethodName: StartCoyoteTime
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
-  OnLandEvent:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1131402461056125134}
-        m_MethodName: EndCoyoteTime
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
---- !u!114 &1131402461056125134
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1131402461056125124}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7092631b4f17d664abbdeb5f1bd9e390, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  PlayerBehaviors: {fileID: 1131402461056125131}
-  m_HorizontalMovement: 0
-  m_DoJump: 0
-  m_RunSpeed: 30
-  m_AdjustRaw: 2
-  m_AdjustAmplitude: 2
-  m_CoyoteTime: 0.1
-  m_BufferedJumpTime: 0.1
-  queuedJump: 0
