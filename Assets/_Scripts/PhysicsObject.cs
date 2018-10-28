@@ -6,7 +6,8 @@ using UnityEngine;
 public class PhysicsObject : MonoBehaviour {
 
     public float minGroundNormalY = .65f;
-    public float GravityModifier = 1f;
+    public float GravityModifierUp = 1f;
+    public float GravityModifierDown = 1f;
 
     protected Vector2 m_TargetVelocity;
     protected bool m_IsGrounded;
@@ -37,7 +38,8 @@ public class PhysicsObject : MonoBehaviour {
     void FixedUpdate() {
 
         // Core Gravity Movement
-        velocity += GravityModifier * Physics2D.gravity * Time.deltaTime;
+        float thisGravity = velocity.y >= 0 ? GravityModifierUp : GravityModifierDown;
+        velocity += thisGravity * Physics2D.gravity * Time.deltaTime;
         velocity.x = m_TargetVelocity.x;
         m_IsGrounded = false;
 
