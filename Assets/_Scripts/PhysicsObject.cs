@@ -60,6 +60,10 @@ public class PhysicsObject : MonoBehaviour {
 
         // Check if we Should Move At all
         float distance = move.magnitude;
+        if ((distance > minMoveDistance) && !vMovement) {
+
+        }
+
         if (distance > minMoveDistance) {
             // Do collisions
             int numberOfContacts = rb2d.Cast(move, m_ContactFilter2D, m_HitBuffer, distance + shellRadius);
@@ -81,8 +85,6 @@ public class PhysicsObject : MonoBehaviour {
                     } else {
                         
                     }
-                } else {
-                    print("Too tall of slope!");
                 }
 
                 // Does our Velocity work?
