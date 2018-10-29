@@ -52,11 +52,11 @@ public class PhysicsObject : MonoBehaviour {
         Movement(move, false);
 
         // Vertical
-        Vector2 ourMove = Vector2.up * deltaPos.y;
-        Movement(ourMove, true);
+        move = Vector2.up * deltaPos.y;
+        Movement(move, true);
     }
 
-    void Movement(Vector2 move, bool yMovement) {
+    void Movement(Vector2 move, bool vMovement) {
 
         // Check if we Should Move At all
         float distance = move.magnitude;
@@ -75,10 +75,14 @@ public class PhysicsObject : MonoBehaviour {
                 if (currentNormal.y > minGroundNormalY) {
                     m_IsGrounded = true;
 
-                    if (yMovement) {
+                    if (vMovement) {
                         m_GroundNormal = currentNormal;
                         currentNormal.x = 0;
+                    } else {
+                        
                     }
+                } else {
+                    print("Too tall of slope!");
                 }
 
                 // Does our Velocity work?

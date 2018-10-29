@@ -143,8 +143,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minGroundNormalY: 0.65
   GravityModifierUp: 10
-  GravityModifierDown: 10
-  MaxSpeed: 16
+  GravityModifierDown: 12
+  MaxSpeed: 12
   MaximumJumpSpeed: 30
   AdjustRawInputExponentially: 2
   AdjustRawInputAmplitude: 4
